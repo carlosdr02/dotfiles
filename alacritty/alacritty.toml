@@ -1,0 +1,9 @@
+[font]
+size = 15
+normal = { family = "SFMono Nerd Font" }
+
+[keyboard]
+bindings = [
+   { key = "C", mods = "Control", action = "Copy" },
+   { key = "V", mods = "Control", action = "Paste" }
+]
