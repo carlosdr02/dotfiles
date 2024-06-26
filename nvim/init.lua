@@ -207,18 +207,21 @@ require('telescope').setup{
     }
 }
 
+-- Add additional capabilities supported by nvim-cmp
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 local lspconfig = require('lspconfig')
 
 lspconfig.clangd.setup {
     cmd = { 'clangd', '--header-insertion=never' },
-    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+    capabilities = capabilities,
     on_attach = function()
         vim.keymap.set('n', '<leader>s', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end
 }
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local servers = { 'tsserver', 'eslint' }
+local servers = { 'tsserver' }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         -- on_attach = my_custom_on_attach,
