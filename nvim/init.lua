@@ -186,9 +186,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', 'gr', builtin.lsp_references, opts)
         vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, opts)
         vim.keymap.set('n', '<leader>fS', builtin.lsp_workspace_symbols, opts)
-
-        -- TODO:
-        vim.keymap.set('n', '<leader>s', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
     end,
 })
 
@@ -215,9 +212,14 @@ require('telescope').setup{
     }
 }
 
-require('lspconfig').clangd.setup {
+local lspconfig = require('lspconfig')
+
+lspconfig.clangd.setup {
     cmd = { 'clangd', '--header-insertion=never' },
-    capabilities = require('cmp_nvim_lsp').default_capabilities()
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+    on_attach = function()
+        vim.keymap.set('n', '<leader>s', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
+    end
 }
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
