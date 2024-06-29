@@ -104,7 +104,8 @@ require('lazy').setup({
     {
         'ThePrimeagen/harpoon',
         dependencies = 'nvim-lua/plenary.nvim'
-    }
+    },
+    'tpope/vim-fugitive'
 })
 
 vim.cmd.colorscheme('tokyonight')
