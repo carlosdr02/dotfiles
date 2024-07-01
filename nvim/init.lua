@@ -107,7 +107,50 @@ require('lazy').setup({
     'hrsh7th/cmp-nvim-lsp-signature-help'
 })
 
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+local lspconfig = require('lspconfig')
+
+lspconfig.clangd.setup {
+    cmd = { 'clangd', '--header-insertion=never' },
+    capabilities = capabilities,
+    on_attach = function()
+        vim.keymap.set('n', '<leader>s', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
+    end
+}
+
+local servers = { 'tsserver', 'eslint' }
+for _, lsp in ipairs(servers) do
+    lspconfig[lsp].setup {
+        capabilities = capabilities
+    }
+end
+
+local luasnip = require 'luasnip'
+
+local cmp = require 'cmp'
+cmp.setup {
+    snippet = {
+        expand = function(args)
+            luasnip.lsp_expand(args.body)
+        end
+    },
+    sources = {
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        { name = 'nvim_lsp_signature_help' }
+    }
+}
+
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+    'confirm_done',
+    cmp_autopairs.on_confirm_done()
+)
+
 vim.cmd.colorscheme('tokyonight')
+
+require('bufferline').setup()
 
 vim.keymap.set('i', 'jk', '<esc>')
 vim.keymap.set('i', 'jK', '<esc>')
@@ -212,34 +255,7 @@ require('telescope').setup{
     }
 }
 
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-local lspconfig = require('lspconfig')
-
-lspconfig.clangd.setup {
-    cmd = { 'clangd', '--header-insertion=never' },
-    capabilities = capabilities,
-    on_attach = function()
-        vim.keymap.set('n', '<leader>s', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
-    end
-}
-
-local servers = { 'tsserver', 'eslint' }
-for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
-        capabilities = capabilities
-    }
-end
-
-local luasnip = require 'luasnip'
-
-local cmp = require 'cmp'
 cmp.setup {
-    snippet = {
-        expand = function(args)
-            luasnip.lsp_expand(args.body)
-        end
-    },
     mapping = cmp.mapping.preset.insert({
         ['<c-u>'] = cmp.mapping.scroll_docs(-4),
         ['<c-d>'] = cmp.mapping.scroll_docs(4),
@@ -266,18 +282,5 @@ cmp.setup {
                 fallback()
             end
         end, { 'i', 's' })
-    }),
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        { name = 'nvim_lsp_signature_help' }
-    }
+    })
 }
-
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-cmp.event:on(
-    'confirm_done',
-    cmp_autopairs.on_confirm_done()
-)
-
-require('bufferline').setup()
