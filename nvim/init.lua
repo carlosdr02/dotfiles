@@ -42,20 +42,7 @@ require('lazy').setup({
     },
     {
         'nvim-treesitter/nvim-treesitter',
-        build = ':TSUpdate',
-        config = function ()
-            local configs = require('nvim-treesitter.configs')
-
-            configs.setup({
-                ensure_installed = {
-                    'c', 'lua', 'vim', 'vimdoc', 'query',
-                    'cpp', 'javascript', 'typescript'
-                },
-                sync_install = false,
-                highlight = { enable = true },
-                indent = { enable = true }
-            })
-        end
+        build = ':TSUpdate'
     },
     {
         'nvim-telescope/telescope.nvim',
@@ -71,18 +58,7 @@ require('lazy').setup({
         'nvim-tree/nvim-tree.lua',
         version = '*',
         lazy = false,
-        dependencies = {
-            'nvim-tree/nvim-web-devicons'
-        },
-        config = function()
-            require('nvim-tree').setup {
-                actions = {
-                    open_file = {
-                        quit_on_open = true
-                    }
-                }
-            }
-        end
+        dependencies = { 'nvim-tree/nvim-web-devicons' }
     },
     {
         'akinsho/bufferline.nvim',
@@ -106,6 +82,24 @@ require('lazy').setup({
     'tpope/vim-fugitive',
     'hrsh7th/cmp-nvim-lsp-signature-help'
 })
+
+require('nvim-treesitter.configs').setup({
+    ensure_installed = {
+        'c', 'lua', 'vim', 'vimdoc', 'query',
+        'cpp', 'javascript', 'typescript'
+    },
+    sync_install = false,
+    highlight = { enable = true },
+    indent = { enable = true }
+})
+
+require('nvim-tree').setup {
+    actions = {
+        open_file = {
+            quit_on_open = true
+        }
+    }
+}
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
