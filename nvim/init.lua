@@ -26,8 +26,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
         'clone',
         '--filter=blob:none',
         'https://github.com/folke/lazy.nvim.git',
-        '--branch=stable', -- latest stable release
-        lazypath,
+        '--branch=stable',
+        lazypath
     })
 end
 
@@ -38,7 +38,7 @@ require('lazy').setup({
         'folke/tokyonight.nvim',
         lazy = false,
         priority = 1000,
-        opts = {},
+        opts = {}
     },
     {
         'nvim-treesitter/nvim-treesitter',
@@ -58,8 +58,8 @@ require('lazy').setup({
         end
     },
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.8',
-        -- or                              , branch = '0.1.x',
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.8',
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
     {
@@ -72,7 +72,7 @@ require('lazy').setup({
         version = '*',
         lazy = false,
         dependencies = {
-            'nvim-tree/nvim-web-devicons',
+            'nvim-tree/nvim-web-devicons'
         },
         config = function()
             require('nvim-tree').setup {
@@ -82,7 +82,7 @@ require('lazy').setup({
                     }
                 }
             }
-        end,
+        end
     },
     {
         'akinsho/bufferline.nvim',
@@ -93,14 +93,12 @@ require('lazy').setup({
         'windwp/nvim-autopairs',
         event = 'InsertEnter',
         config = true
-        -- use opts = {} for passing setup options
-        -- this is equalent to setup({}) function
     },
-    'neovim/nvim-lspconfig', -- Collection of configurations for built-in LSP client
-    'hrsh7th/nvim-cmp', -- Autocompletion plugin
-    'hrsh7th/cmp-nvim-lsp', -- LSP source for nvim-cmp
-    'saadparwaiz1/cmp_luasnip', -- Snippets source for nvim-cmp
-    'L3MON4D3/LuaSnip', -- Snippets plugin
+    'neovim/nvim-lspconfig',
+    'hrsh7th/nvim-cmp',
+    'hrsh7th/cmp-nvim-lsp',
+    'saadparwaiz1/cmp_luasnip',
+    'L3MON4D3/LuaSnip',
     {
         'ThePrimeagen/harpoon',
         dependencies = 'nvim-lua/plenary.nvim'
@@ -139,13 +137,13 @@ vim.keymap.set('v', '<a-j>', ':m \'>+1<cr>gv=gv', silent)
 vim.keymap.set('v', '<a-k>', ':m \'<-2<cr>gv=gv', silent)
 
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fF', builtin.git_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fG', builtin.grep_string, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>fd', builtin.diagnostics, {})
+vim.keymap.set('n', '<leader>ff', builtin.find_files)
+vim.keymap.set('n', '<leader>fF', builtin.git_files)
+vim.keymap.set('n', '<leader>fg', builtin.live_grep)
+vim.keymap.set('n', '<leader>fG', builtin.grep_string)
+vim.keymap.set('n', '<leader>fb', builtin.buffers)
+vim.keymap.set('n', '<leader>fh', builtin.help_tags)
+vim.keymap.set('n', '<leader>fd', builtin.diagnostics)
 
 vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeFindFileToggle<cr>')
 
@@ -188,7 +186,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', 'gr', builtin.lsp_references, opts)
         vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, opts)
         vim.keymap.set('n', '<leader>fS', builtin.lsp_workspace_symbols, opts)
-    end,
+    end
 })
 
 local actions = require('telescope.actions')
@@ -214,7 +212,6 @@ require('telescope').setup{
     }
 }
 
--- Add additional capabilities supported by nvim-cmp
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local lspconfig = require('lspconfig')
@@ -227,36 +224,31 @@ lspconfig.clangd.setup {
     end
 }
 
--- Enable some language servers with the additional completion capabilities offered by nvim-cmp
 local servers = { 'tsserver', 'eslint' }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
-        -- on_attach = my_custom_on_attach,
-        capabilities = capabilities,
+        capabilities = capabilities
     }
 end
 
--- luasnip setup
 local luasnip = require 'luasnip'
 
--- nvim-cmp setup
 local cmp = require 'cmp'
 cmp.setup {
     snippet = {
         expand = function(args)
             luasnip.lsp_expand(args.body)
-        end,
+        end
     },
     mapping = cmp.mapping.preset.insert({
-        ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
-        ['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
-        -- C-b (back) C-f (forward) for snippet placeholder navigation.
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<CR>'] = cmp.mapping.confirm {
+        ['<c-u>'] = cmp.mapping.scroll_docs(-4),
+        ['<c-d>'] = cmp.mapping.scroll_docs(4),
+        ['<c-space>'] = cmp.mapping.complete(),
+        ['<cr>'] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
+            select = true
         },
-        ['<Tab>'] = cmp.mapping(function(fallback)
+        ['<tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expand_or_locally_jumpable() then
@@ -265,7 +257,7 @@ cmp.setup {
                 fallback()
             end
         end, { 'i', 's' }),
-        ['<S-Tab>'] = cmp.mapping(function(fallback)
+        ['<s-tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif luasnip.locally_jumpable(-1) then
@@ -273,16 +265,15 @@ cmp.setup {
             else
                 fallback()
             end
-        end, { 'i', 's' }),
+        end, { 'i', 's' })
     }),
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
-        { name = 'nvim_lsp_signature_help' },
-    },
+        { name = 'nvim_lsp_signature_help' }
+    }
 }
 
--- If you want insert `(` after select function or method item
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on(
     'confirm_done',
