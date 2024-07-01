@@ -1,150 +1,7 @@
-vim.o.number = true
-vim.o.relativenumber = true
-vim.o.cursorline = true
-vim.o.signcolumn = 'yes'
-vim.o.colorcolumn = '80'
-vim.o.termguicolors = true
-vim.o.wrap = false
-vim.o.hlsearch = false
-vim.o.scrolloff = 8
-vim.o.tabstop = 4
-vim.o.expandtab = true
-vim.o.shiftwidth = 4
-vim.o.shiftround = true
-vim.o.showmode = false
-vim.o.clipboard = 'unnamedplus'
+require('settings')
+require('plugins')
 
-vim.g.mapleader = ' '
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
-local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    vim.fn.system({
-        'git',
-        'clone',
-        '--filter=blob:none',
-        'https://github.com/folke/lazy.nvim.git',
-        '--branch=stable',
-        lazypath
-    })
-end
-
-vim.opt.rtp:prepend(lazypath)
-
-require('lazy').setup({
-    {
-        'folke/tokyonight.nvim',
-        lazy = false,
-        priority = 1000,
-        opts = {}
-    },
-    {
-        'nvim-treesitter/nvim-treesitter',
-        build = ':TSUpdate'
-    },
-    {
-        'nvim-telescope/telescope.nvim',
-        tag = '0.1.8',
-        dependencies = { 'nvim-lua/plenary.nvim' }
-    },
-    {
-        'nvim-lualine/lualine.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
-        opts = {}
-    },
-    {
-        'nvim-tree/nvim-tree.lua',
-        version = '*',
-        lazy = false,
-        dependencies = { 'nvim-tree/nvim-web-devicons' }
-    },
-    {
-        'akinsho/bufferline.nvim',
-        version = '*',
-        dependencies = 'nvim-tree/nvim-web-devicons'
-    },
-    {
-        'windwp/nvim-autopairs',
-        event = 'InsertEnter',
-        config = true
-    },
-    'neovim/nvim-lspconfig',
-    'hrsh7th/nvim-cmp',
-    'hrsh7th/cmp-nvim-lsp',
-    'saadparwaiz1/cmp_luasnip',
-    'L3MON4D3/LuaSnip',
-    {
-        'ThePrimeagen/harpoon',
-        dependencies = 'nvim-lua/plenary.nvim'
-    },
-    'tpope/vim-fugitive',
-    'hrsh7th/cmp-nvim-lsp-signature-help'
-})
-
-require('nvim-treesitter.configs').setup({
-    ensure_installed = {
-        'c', 'lua', 'vim', 'vimdoc', 'query',
-        'cpp', 'javascript', 'typescript'
-    },
-    sync_install = false,
-    highlight = { enable = true },
-    indent = { enable = true }
-})
-
-require('nvim-tree').setup {
-    actions = {
-        open_file = {
-            quit_on_open = true
-        }
-    }
-}
-
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-local lspconfig = require('lspconfig')
-
-lspconfig.clangd.setup {
-    cmd = { 'clangd', '--header-insertion=never' },
-    capabilities = capabilities,
-    on_attach = function()
-        vim.keymap.set('n', '<leader>s', '<cmd>ClangdSwitchSourceHeader<cr>', opts)
-    end
-}
-
-local servers = { 'tsserver', 'eslint' }
-for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
-        capabilities = capabilities
-    }
-end
-
-local luasnip = require 'luasnip'
-
-local cmp = require 'cmp'
-cmp.setup {
-    snippet = {
-        expand = function(args)
-            luasnip.lsp_expand(args.body)
-        end
-    },
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        { name = 'nvim_lsp_signature_help' }
-    }
-}
-
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-cmp.event:on(
-    'confirm_done',
-    cmp_autopairs.on_confirm_done()
-)
-
-vim.cmd.colorscheme('tokyonight')
-
-require('bufferline').setup()
+-- Mapleader is set to space
 
 vim.keymap.set('i', 'jk', '<esc>')
 vim.keymap.set('i', 'jK', '<esc>')
@@ -249,6 +106,8 @@ require('telescope').setup{
     }
 }
 
+local luasnip = require 'luasnip'
+local cmp = require 'cmp'
 cmp.setup {
     mapping = cmp.mapping.preset.insert({
         ['<c-u>'] = cmp.mapping.scroll_docs(-4),
