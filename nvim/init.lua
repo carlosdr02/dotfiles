@@ -105,7 +105,8 @@ require('lazy').setup({
         'ThePrimeagen/harpoon',
         dependencies = 'nvim-lua/plenary.nvim'
     },
-    'tpope/vim-fugitive'
+    'tpope/vim-fugitive',
+    'hrsh7th/cmp-nvim-lsp-signature-help'
 })
 
 vim.cmd.colorscheme('tokyonight')
@@ -277,6 +278,7 @@ cmp.setup {
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'nvim_lsp_signature_help' },
     },
 }
 
