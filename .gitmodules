@@ -1,3 +1,4 @@
 [submodule "/home/carlos/.config/nvim"]
 	path = /home/carlos/.config/nvim
 	url = https://github.com/carlosdr02/nvim
+	branch = 2026
