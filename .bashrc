@@ -11,3 +11,6 @@ source ~/.local/share/omarchy/default/bash/rc
 # alias p='python'
 
 alias dots='git --git-dir=$HOME/dev/dotfiles --work-tree=$HOME'
+
+set -h
+source /usr/share/nvm/init-nvm.sh
